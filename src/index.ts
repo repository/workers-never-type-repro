@@ -1,8 +1,16 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
 
+interface NestedUnknown {
+	bar: unknown[];
+}
+
 class Foo extends WorkerEntrypoint {
 	public wtf(): unknown {
 		return;
+	}
+
+	wtf2(): NestedUnknown {
+		return { bar: [] };
 	}
 }
 
@@ -14,6 +22,9 @@ export default {
 
 		//     VV this is never type for some reason
 		const blah = await testService.wtf();
+
+		// also this is never type
+		const nested = await testService.wtf2();
 
 		return new Response("Hello World!");
 	},
